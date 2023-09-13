@@ -1,0 +1,35 @@
+REPORT zr_qm_inclusion_std_measure.
+
+INCLUDE zi_qm_inclus_std_meas_top.
+INCLUDE zi_qm_inclus_std_meas_scr.
+INCLUDE zi_qm_inclus_std_meas_f01.
+
+START-OF-SELECTION.
+
+  IF sy-subrc = 0.
+    PERFORM zf_note_in_process .
+
+      "Verificar se a nota está em processamento com base nas condições
+      IF iv_checkproc  = 'X'.
+
+        PERFORM zf_closed_measures.
+
+      ELSE.
+        iv_checkproc  = ' '.
+      ENDIF.
+    ENDIF.
+********* Perform para validar e enviar emails cadastrados na tabela ztqm_incl_measur ******************
+    IF iv_checkemail = 'X' AND iv_checkproc = 'X' AND iv_check = 'X'.
+
+      "Validação contador emails subsequentes
+      PERFORM zf_validate_counteremail.
+
+      PERFORM zf_validate_emailsub.
+
+    "Se condições falsa mensagem de email não enviado
+    ELSEIF iv_checkemail = abap_false.
+      MESSAGE s000(ze_qm_d012).
+    ENDIF.
+
+
+END-OF-SELECTION.
