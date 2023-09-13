@@ -1,0 +1,50 @@
+ TYPES:
+      BEGIN OF r_timedate,
+        sign(1),
+        option(2),
+        low       LIKE sy-datum,
+        high      LIKE sy-datum,
+      END OF r_timedate.
+
+    DATA: t_period    TYPE TABLE OF r_timedate.
+
+    DATA: lv_objnr TYPE objnr,        " Objeto número
+          lv_istat TYPE jest-stat,    " Status do objeto
+          lv_inact TYPE jest-inact.    " Indicador de inativação
+
+    " Defina a nota QM que está em processamento
+    DATA: lt_qmel TYPE TABLE OF qmel,
+          ls_qmel TYPE qmel.
+    DATA: lt_qmsm        TYPE TABLE OF qmsm,
+          ls_qmsm        TYPE qmsm-qmnum,
+          lt_jest        TYPE TABLE OF jest,
+          ls_jest        TYPE jest,
+          lt_check       TYPE TABLE OF zst_qm_check_note_processing,
+          ls_check       TYPE zst_qm_check_note_processing,
+          ls_aedat       TYPE qmsm-aedat,
+          lv_periodo     TYPE c,
+          lv_emailsub    TYPE c,
+          date_limite    TYPE datum,
+          iv_checkproc   TYPE abap_bool,
+          iv_checkemail  TYPE abap_bool,
+          iv_counter     TYPE abap_bool,
+          iv_check       TYPE abap_bool,
+          iv_SENT_TO_ALL TYPE os_boolean.
+
+
+    DATA: lv_pdate TYPE d,
+          lv_aedat TYPE d,
+          iv_qmnum TYPE qmsm-qmnum.
+********** Declarações das variáveis da tabela auxiliar *************************************
+
+    DATA: it_checkemail   TYPE TABLE OF ztqm_incl_measur,
+          is_checkemail   TYPE ztqm_incl_measur,
+          lv_center       TYPE ztqm_incl_measur-centro,
+          lv_typenote     TYPE ztqm_incl_measur-tipo_nota,
+          lv_p_firstemail TYPE ztqm_incl_measur-period_primeiro_email,
+          lv_p_emailsub   TYPE ztqm_incl_measur-period_email_sub,
+          lv_receptemail  TYPE ztqm_incl_measur-recept_emails,
+          lv_sender       TYPE ztqm_incl_measur-remetente_emails,
+          lv_efficiency   TYPE ztqm_incl_measur-nome_cat_eficacia.
+
+    FIELD-SYMBOLS: <ls_check> LIKE LINE OF lt_check.
